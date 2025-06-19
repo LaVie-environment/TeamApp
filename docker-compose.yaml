@@ -5,7 +5,7 @@ services:
     environment:
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_DB: eshopdb
-      POSTGRES_HOST_AUTH_METHOD: trust  # Critical for health checks
+      POSTGRES_HOST_AUTH_METHOD: trust
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -13,11 +13,11 @@ services:
     networks:
       - eshop-network
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres -d eshopdb"]  # Specific DB check
+      test: ["CMD-SHELL", "pg_isready -U postgres -d eshopdb"]
       interval: 10s
       timeout: 10s
       retries: 10
-      start_period: 30s  # Extended initialization time
+      start_period: 30s
 
   eshop:
     image: eshop:latest
@@ -31,9 +31,14 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://dev-postgres:5432/eshopdb
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: mysecretpassword
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update  # Recommended for development
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      # Add these two critical environment variables:
+      SERVER_SERVLET_CONTEXT_PATH: /eshop
+      SERVER_TOMCAT_BASEDIR: /tmp
     networks:
       - eshop-network
+    # Add this if you want to see Spring Boot startup logs:
+    command: ["--spring.config.location=classpath:/application.properties"]
 
 volumes:
   pgdata:
