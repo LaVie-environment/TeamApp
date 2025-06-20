@@ -1,3 +1,5 @@
+version: "3.8"
+
 services:
   dev-postgres:
     image: postgres:16
@@ -5,7 +7,7 @@ services:
     environment:
       POSTGRES_PASSWORD: mysecretpassword
       POSTGRES_DB: eshopdb
-      POSTGRES_HOST_AUTH_METHOD: trust
+      POSTGRES_USER: postgres
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -24,20 +26,16 @@ services:
     image: eshop:latest
     container_name: eshop
     ports:
-      - "8080:8080"
+      - "8081:8080"
     depends_on:
       dev-postgres:
         condition: service_healthy
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://dev-postgres:5432/eshopdb
-      SPRING_DATASOURCE_USERNAME: postgres
-      SPRING_DATASOURCE_PASSWORD: mysecretpassword
-      SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      SERVER_SERVLET_CONTEXT_PATH: /eshop  # This is the critical line
-      SERVER_TOMCAT_BASEDIR: /tmp
+      JDBC_URL: jdbc:postgresql://dev-postgres:5432/eshopdb
+      JDBC_USER: postgres
+      JDBC_PASSWORD: mysecretpassword
     networks:
       - eshop-network
-    # Remove the command line completely - the environment variable is sufficient
 
 volumes:
   pgdata:
