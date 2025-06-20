@@ -12,7 +12,7 @@ public class MainWebAppInitialiser extends AbstractAnnotationConfigDispatcherSer
     }
     @Override
     protected String[] getServletMappings() {
-        return new String[]{"/"};
+        return new String[]{"/eshop/*"};
     }
     @Override
     protected Filter[] getServletFilters() {
