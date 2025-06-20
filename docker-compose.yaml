@@ -20,6 +20,7 @@ services:
       start_period: 30s
 
   eshop:
+    build: .
     image: eshop:latest
     container_name: eshop
     ports:
@@ -32,13 +33,11 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: mysecretpassword
       SPRING_JPA_HIBERNATE_DDL_AUTO: update
-      # Add these two critical environment variables:
-      SERVER_SERVLET_CONTEXT_PATH: /eshop
+      SERVER_SERVLET_CONTEXT_PATH: /eshop  # This is the critical line
       SERVER_TOMCAT_BASEDIR: /tmp
     networks:
       - eshop-network
-    # Add this if you want to see Spring Boot startup logs:
-    command: ["--spring.config.location=classpath:/application.properties"]
+    # Remove the command line completely - the environment variable is sufficient
 
 volumes:
   pgdata:
