@@ -1,6 +1,8 @@
 package cz.mendelu.service;
 
 import cz.mendelu.service.dto.StudentDTO;
+import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -8,27 +10,31 @@ import org.springframework.web.client.RestTemplate;
 import java.util.Arrays;
 import java.util.List;
 
+@Primary // Use this mock by default if multiple implementations exist
+@Profile("mock") // Only active when 'mock' profile is enabled
 @Service
-//@Primary // Uncomment if you want this to override the DB-backed implementation
-//@Profile("mock") // Optional: use with Spring profiles
 public class StudentServiceMockImpl implements StudentService {
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate;
 
-    // Replace this with your actual mock server base URL
+    // Constructor injection recommended for testability
+    public StudentServiceMockImpl() {
+        this.restTemplate = new RestTemplate();
+    }
+
     private static final String MOCK_API_BASE_URL = "https://2aec4e71-95bf-4ea1-9357-dab19bbfe750.mock.pstmn.io/api";
 
     @Override
     public List<StudentDTO> getAllStudents() {
         ResponseEntity<StudentDTO[]> response = restTemplate.getForEntity(
-            MOCK_API_BASE_URL + "/students", StudentDTO[].class);
+                MOCK_API_BASE_URL + "/students", StudentDTO[].class);
         return Arrays.asList(response.getBody());
     }
 
     @Override
     public StudentDTO findById(Long id) {
         return restTemplate.getForObject(
-            MOCK_API_BASE_URL + "/students/" + id, StudentDTO.class);
+                MOCK_API_BASE_URL + "/students/" + id, StudentDTO.class);
     }
 
     @Override

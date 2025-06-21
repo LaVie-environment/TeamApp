@@ -37,4 +37,5 @@ cz/mendelu/service/RoleServiceImpl.class
 cz/mendelu/service/RoleService.class
 cz/mendelu/config/EshopConfig.class
 cz/mendelu/dao/domain/Project.class
+cz/mendelu/EshopApplication.class
 cz/mendelu/dao/TaskDao.class
