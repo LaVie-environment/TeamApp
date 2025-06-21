@@ -2,6 +2,10 @@ package cz.mendelu.service.dto;
 
 public class TaskDTO {
     private Long id;
+    private String title;
+    private String description;
+    private Long projectId;
+    private String status;
 
     public Long getId() {
         return id;
@@ -35,9 +39,11 @@ public class TaskDTO {
         this.projectId = projectId;
     }
 
-    private String title;
-    private String description;
-    private Long projectId;
+    public String getStatus() {
+        return status;
+    }
 
-    // Getters and Setters
+    public void setStatus(String status) {
+        this.status = status;
+    }
 }

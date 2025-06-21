@@ -5,6 +5,15 @@ public class Task {
     private String title;
     private String description;
     private Long projectId; // To link back to Project
+    private String status;  // <-- Add this to match mock API
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getTitle() {
         return title;
@@ -30,12 +39,11 @@ public class Task {
         this.projectId = projectId;
     }
 
-    public Long getId() {
-        return id;
+    public String getStatus() {
+        return status;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setStatus(String status) {
+        this.status = status;
     }
-    /* Getters and Setters */
 }

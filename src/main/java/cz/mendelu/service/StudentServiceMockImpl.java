@@ -16,7 +16,7 @@ public class StudentServiceMockImpl implements StudentService {
     private final RestTemplate restTemplate = new RestTemplate();
 
     // Replace this with your actual mock server base URL
-    private static final String MOCK_API_BASE_URL = "https://2aec4e71-95bf-4ea1-9357-dab19bbfe750.mock.pstmn.io";
+    private static final String MOCK_API_BASE_URL = "https://2aec4e71-95bf-4ea1-9357-dab19bbfe750.mock.pstmn.io/api";
 
     @Override
     public List<StudentDTO> getAllStudents() {

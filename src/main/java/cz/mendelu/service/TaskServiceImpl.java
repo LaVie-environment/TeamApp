@@ -48,8 +48,7 @@ public class TaskServiceImpl implements TaskService {
         TaskDTO dto = new TaskDTO();
         dto.setId(task.getId());
         dto.setTitle(task.getTitle());
-        dto.setDescription(task.getDescription());
-        dto.setProjectId(task.getProjectId());
+        dto.setStatus(task.getStatus());  // <-- Match your mock data
         return dto;
     }
 
@@ -57,8 +56,7 @@ public class TaskServiceImpl implements TaskService {
         Task task = new Task();
         task.setId(dto.getId());
         task.setTitle(dto.getTitle());
-        task.setDescription(dto.getDescription());
-        task.setProjectId(dto.getProjectId());
+        task.setStatus(dto.getStatus());  // <-- Add this to domain model if needed
         return task;
     }
 }

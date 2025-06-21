@@ -1,7 +1,6 @@
 package cz.mendelu.service;
 
 import cz.mendelu.service.dto.RoleDTO;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -16,15 +15,17 @@ public class RoleServiceMockImpl implements RoleService {
 
     @Override
     public List<RoleDTO> getAllRoles() {
-        ResponseEntity<RoleDTO[]> response = restTemplate.getForEntity(
+        RoleDTO[] roles = restTemplate.getForObject(
             MOCK_API_BASE_URL + "/roles", RoleDTO[].class);
-        return Arrays.asList(response.getBody());
+        return Arrays.asList(roles);
     }
 
     @Override
     public RoleDTO getRoleById(Long id) {
-        return restTemplate.getForObject(
-            MOCK_API_BASE_URL + "/roles/" + id, RoleDTO.class);
+        return getAllRoles().stream()
+            .filter(r -> r.getId().equals(id))
+            .findFirst()
+            .orElse(null);
     }
 
     @Override
