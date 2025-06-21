@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/eshop/api/students")
+@RequestMapping("/api/students")
 public class StudentController {
 
     private final StudentService studentService;
@@ -37,7 +37,8 @@ public class StudentController {
     // Update an existing student
     @PutMapping("/{id}")
     public void updateStudent(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
-        studentDTO.setId(id);
+        studentDTO.se
+    tId(id);
         studentService.update(studentDTO);
     }
 
