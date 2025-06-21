@@ -11,7 +11,6 @@ import java.util.Arrays;
 import java.util.List;
 
 @Primary // Use this mock by default if multiple implementations exist
-@Profile("mock") // Only active when 'mock' profile is enabled
 @Service
 public class StudentServiceMockImpl implements StudentService {
 

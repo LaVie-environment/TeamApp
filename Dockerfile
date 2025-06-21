@@ -5,7 +5,7 @@ FROM eclipse-temurin:21-jre
 WORKDIR /app
 
 # Copy the JAR file (adjust the filename if necessary)
-COPY target/eshop-1.0-SNAPSHOT.jar app.jar
+COPY target/eshop.jar app.jar
 
 # Expose the port your Spring Boot app runs on
 EXPOSE 8080
