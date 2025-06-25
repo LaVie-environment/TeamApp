@@ -42,4 +42,10 @@ public class RoleServiceMockImpl implements RoleService {
     public void delete(Long id) {
         throw new UnsupportedOperationException("Mock API does not support deleting roles.");
     }
+
+    @Override
+    public RoleDTO getRoleByName(String name) {
+        throw new UnsupportedOperationException("Mock does not support querying roles by name.");
+    }
+
 }

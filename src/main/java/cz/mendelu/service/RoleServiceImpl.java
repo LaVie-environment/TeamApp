@@ -1,58 +1,67 @@
 package cz.mendelu.service;
 
-import cz.mendelu.dao.RoleDao;
+import cz.mendelu.dao.RoleRepository;
 import cz.mendelu.dao.domain.Role;
 import cz.mendelu.service.dto.RoleDTO;
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Service
+@Service
+@Primary
 public class RoleServiceImpl implements RoleService {
 
-    private final RoleDao roleDao;
+    private final RoleRepository roleRepository;
 
-    public RoleServiceImpl(RoleDao roleDao) {
-        this.roleDao = roleDao;
+    public RoleServiceImpl(RoleRepository roleRepository) {
+        this.roleRepository = roleRepository;
     }
 
     @Override
     public List<RoleDTO> getAllRoles() {
-        return roleDao.findAll().stream().map(this::toDto).collect(Collectors.toList());
+        return roleRepository.findAll().stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
     public RoleDTO getRoleById(Long id) {
-        return toDto(roleDao.findById(id));
+        return roleRepository.findById(id)
+                .map(this::toDto)
+                .orElse(null);
+    }
+
+    @Override
+    public RoleDTO getRoleByName(String name) {
+        return roleRepository.findByName(name)
+                .map(this::toDto)
+                .orElse(null);
     }
 
     @Override
     public void save(RoleDTO roleDTO) {
-        roleDao.save(toEntity(roleDTO));
+        roleRepository.save(toEntity(roleDTO));
     }
 
     @Override
     public void update(RoleDTO roleDTO) {
-        roleDao.update(toEntity(roleDTO));
+        if (roleDTO.getId() != null && roleRepository.existsById(roleDTO.getId())) {
+            roleRepository.save(toEntity(roleDTO));
+        }
     }
 
     @Override
     public void delete(Long id) {
-        roleDao.delete(id);
+        roleRepository.deleteById(id);
     }
 
     private RoleDTO toDto(Role role) {
-        RoleDTO dto = new RoleDTO();
-        dto.setId(role.getId());
-        dto.setName(role.getName());
-        return dto;
+        return new RoleDTO(role.getId(), role.getName());
     }
 
     private Role toEntity(RoleDTO dto) {
-        Role role = new Role();
-        role.setId(dto.getId());
-        role.setName(dto.getName());
-        return role;
+        return new Role(dto.getId(), dto.getName());
     }
 }

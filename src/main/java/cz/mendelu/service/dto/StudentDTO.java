@@ -11,7 +11,7 @@ public class StudentDTO {
     private String personalNumber;
     private String phone;
     private int age;
-    private List<AddressDTO> addressDTO;
+    private AddressDTO addressDTO;
 
     public int getAge() {
         return age;
@@ -61,10 +61,10 @@ public class StudentDTO {
         this.id = id;
     }
 
-    public List<AddressDTO> getAddressDTO() {
+    public AddressDTO getAddressDTO() {
         return addressDTO;
     }
-    public void setAddressDTO(List<AddressDTO> addressDTO) {
+    public void setAddressDTO(AddressDTO addressDTO) {
         this.addressDTO = addressDTO;
     }
 }

@@ -27,23 +27,4 @@ public class RoleController {
     public RoleDTO getRoleById(@PathVariable Long id) {
         return roleService.getRoleById(id);
     }
-
-    // Create a new role
-    @PostMapping
-    public void createRole(@RequestBody RoleDTO roleDTO) {
-        roleService.save(roleDTO);
-    }
-
-    // Update a role
-    @PutMapping("/{id}")
-    public void updateRole(@PathVariable Long id, @RequestBody RoleDTO roleDTO) {
-        roleDTO.setId(id);
-        roleService.update(roleDTO);
-    }
-
-    // Delete a role
-    @DeleteMapping("/{id}")
-    public void deleteRole(@PathVariable Long id) {
-        roleService.delete(id);
-    }
 }

@@ -1,7 +1,9 @@
 package cz.mendelu.service;
 
 import cz.mendelu.dao.StudentDAO;
+import cz.mendelu.dao.domain.Address;
 import cz.mendelu.dao.domain.Student;
+import cz.mendelu.service.dto.AddressDTO;
 import cz.mendelu.service.dto.StudentDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,7 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
-//@Service
+@Service
 @Transactional
 public class StudentServiceImpl implements StudentService {
 
@@ -29,7 +31,7 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public StudentDTO findById(Long id) {  // Renamed from getStudentById
+    public StudentDTO findById(Long id) {
         Student student = studentDAO.findById(id);
         return convertToDto(student);
     }
@@ -57,6 +59,7 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
+    // Convert Entity to DTO
     private StudentDTO convertToDto(Student student) {
         if (student == null) return null;
 
@@ -67,9 +70,21 @@ public class StudentServiceImpl implements StudentService {
         dto.setAge(student.getAge());
         dto.setPersonalNumber(student.getPersonalNumber());
         dto.setPhone(student.getPhone());
+
+        if (student.getAddress() != null) {
+            AddressDTO addressDTO = new AddressDTO();
+            addressDTO.setId(student.getAddress().getId());
+            addressDTO.setStreet(student.getAddress().getStreet());
+            addressDTO.setPostcode(student.getAddress().getPostcode());
+            addressDTO.setCity(student.getAddress().getCity());
+            addressDTO.setCountry(student.getAddress().getCountry());
+            dto.setAddressDTO(addressDTO);
+        }
+
         return dto;
     }
 
+    // Convert DTO to Entity
     private Student convertToEntity(StudentDTO dto) {
         Student student = new Student();
         student.setId(dto.getId());
@@ -78,14 +93,36 @@ public class StudentServiceImpl implements StudentService {
         student.setAge(dto.getAge());
         student.setPersonalNumber(dto.getPersonalNumber());
         student.setPhone(dto.getPhone());
+
+        if (dto.getAddressDTO() != null) {
+            Address address = new Address();
+            address.setId(dto.getAddressDTO().getId());
+            address.setStreet(dto.getAddressDTO().getStreet());
+            address.setPostcode(dto.getAddressDTO().getPostcode());
+            address.setCity(dto.getAddressDTO().getCity());
+            address.setCountry(dto.getAddressDTO().getCountry());
+            student.setAddress(address);
+        }
+
         return student;
     }
 
+    // Update an existing student with DTO
     private void updateEntityFromDto(Student student, StudentDTO dto) {
         student.setName(dto.getName());
         student.setSurname(dto.getSurname());
         student.setAge(dto.getAge());
         student.setPersonalNumber(dto.getPersonalNumber());
         student.setPhone(dto.getPhone());
+
+        if (dto.getAddressDTO() != null) {
+            Address address = new Address();
+            address.setId(dto.getAddressDTO().getId());
+            address.setStreet(dto.getAddressDTO().getStreet());
+            address.setPostcode(dto.getAddressDTO().getPostcode());
+            address.setCity(dto.getAddressDTO().getCity());
+            address.setCountry(dto.getAddressDTO().getCountry());
+            student.setAddress(address);
+        }
     }
 }
