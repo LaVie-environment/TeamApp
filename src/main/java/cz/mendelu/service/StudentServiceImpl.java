@@ -71,13 +71,15 @@ public class StudentServiceImpl implements StudentService {
         dto.setPersonalNumber(student.getPersonalNumber());
         dto.setPhone(student.getPhone());
 
-        if (student.getAddress() != null) {
+        // Handle list of addresses
+        if (student.getAddress() != null && !student.getAddress().isEmpty()) {
+            Address address = student.getAddress().get(0); // Use first address
             AddressDTO addressDTO = new AddressDTO();
-            addressDTO.setId(student.getAddress().getId());
-            addressDTO.setStreet(student.getAddress().getStreet());
-            addressDTO.setPostcode(student.getAddress().getPostcode());
-            addressDTO.setCity(student.getAddress().getCity());
-            addressDTO.setCountry(student.getAddress().getCountry());
+            addressDTO.setId(address.getId());
+            addressDTO.setStreet(address.getStreet());
+            addressDTO.setPostcode(address.getPostcode());
+            addressDTO.setCity(address.getCity());
+            addressDTO.setCountry(address.getCountry());
             dto.setAddressDTO(addressDTO);
         }
 
@@ -101,13 +103,14 @@ public class StudentServiceImpl implements StudentService {
             address.setPostcode(dto.getAddressDTO().getPostcode());
             address.setCity(dto.getAddressDTO().getCity());
             address.setCountry(dto.getAddressDTO().getCountry());
-            student.setAddress(address);
+            address.setStudent(student); // Set back-reference
+            student.setAddress(List.of(address)); // Set as list
         }
 
         return student;
     }
 
-    // Update an existing student with DTO
+    // Update Entity from DTO
     private void updateEntityFromDto(Student student, StudentDTO dto) {
         student.setName(dto.getName());
         student.setSurname(dto.getSurname());
@@ -122,7 +125,8 @@ public class StudentServiceImpl implements StudentService {
             address.setPostcode(dto.getAddressDTO().getPostcode());
             address.setCity(dto.getAddressDTO().getCity());
             address.setCountry(dto.getAddressDTO().getCountry());
-            student.setAddress(address);
+            address.setStudent(student);
+            student.setAddress(List.of(address));
         }
     }
 }
