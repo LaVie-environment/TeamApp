@@ -1,39 +1,51 @@
 package cz.mendelu.dao;
 
 import cz.mendelu.dao.domain.Role;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.*;
+import java.util.List;
 
 @Repository
+@Transactional
 public class RoleDaoImpl implements RoleDao {
 
-    private final Map<Long, Role> roleMap = new HashMap<>();
-    private Long idCounter = 1L;
+    @PersistenceContext
+    private EntityManager em;
 
     @Override
     public List<Role> findAll() {
-        return new ArrayList<>(roleMap.values());
+        return em.createQuery("SELECT r FROM Role r", Role.class).getResultList();
     }
 
     @Override
     public Role findById(Long id) {
-        return roleMap.get(id);
+        return em.find(Role.class, id);
+    }
+
+    @Override
+    public Role findByName(String name) {
+        TypedQuery<Role> query = em.createQuery("SELECT r FROM Role r WHERE r.name = :name", Role.class);
+        query.setParameter("name", name);
+        List<Role> results = query.getResultList();
+        return results.isEmpty() ? null : results.get(0);
     }
 
     @Override
     public void save(Role role) {
-        role.setId(idCounter++);
-        roleMap.put(role.getId(), role);
+        if (role.getId() == null) {
+            em.persist(role);
+        } else {
+            em.merge(role);
+        }
     }
 
     @Override
-    public void update(Role role) {
-        roleMap.put(role.getId(), role);
-    }
-
-    @Override
-    public void delete(Long id) {
-        roleMap.remove(id);
+    public void delete(Role role) {
+        Role managed = em.contains(role) ? role : em.merge(role);
+        em.remove(managed);
     }
 }

@@ -13,25 +13,39 @@ public class Role {
     @Column(unique = true, nullable = false)
     private String name;
 
+    // No-arg constructor required by JPA
+    public Role() {
+    }
+
+    // Optional: All-args constructor
     public Role(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    // Getters and setters
+    // Getters and Setters
     public Long getId() {
         return id;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setId(Long id) {
         this.id = id;
     }
 
+    public String getName() {
+        return name;
+    }
+
     public void setName(String name) {
         this.name = name;
+    }
+
+    // Optional: Debug support
+    @Override
+    public String toString() {
+        return "Role{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

@@ -42,26 +42,34 @@ public class RoleServiceImpl implements RoleService {
 
     @Override
     public void save(RoleDTO roleDTO) {
-        roleRepository.save(toEntity(roleDTO));
+        if (roleDTO != null) {
+            Role role = toEntity(roleDTO);
+            roleRepository.save(role);
+        }
     }
 
     @Override
     public void update(RoleDTO roleDTO) {
-        if (roleDTO.getId() != null && roleRepository.existsById(roleDTO.getId())) {
-            roleRepository.save(toEntity(roleDTO));
+        if (roleDTO != null && roleDTO.getId() != null && roleRepository.existsById(roleDTO.getId())) {
+            Role role = toEntity(roleDTO);
+            roleRepository.save(role);
         }
     }
 
     @Override
     public void delete(Long id) {
-        roleRepository.deleteById(id);
+        if (id != null && roleRepository.existsById(id)) {
+            roleRepository.deleteById(id);
+        }
     }
 
     private RoleDTO toDto(Role role) {
+        if (role == null) return null;
         return new RoleDTO(role.getId(), role.getName());
     }
 
     private Role toEntity(RoleDTO dto) {
+        if (dto == null) return null;
         return new Role(dto.getId(), dto.getName());
     }
 }

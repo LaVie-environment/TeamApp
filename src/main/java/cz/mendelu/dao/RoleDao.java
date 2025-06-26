@@ -4,9 +4,14 @@ import cz.mendelu.dao.domain.Role;
 import java.util.List;
 
 public interface RoleDao {
+    
     List<Role> findAll();
+    
     Role findById(Long id);
+    
+    Role findByName(String name); // Optional: helpful for lookups like "Developer"
+    
     void save(Role role);
-    void update(Role role);
-    void delete(Long id);
+    
+    void delete(Role role);
 }
