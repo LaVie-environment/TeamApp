@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -38,12 +39,15 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void save(StudentDTO studentDTO) {
+        if (studentDTO == null) return;
         Student student = convertToEntity(studentDTO);
         studentDAO.save(student);
     }
 
     @Override
     public void update(StudentDTO studentDTO) {
+        if (studentDTO == null || studentDTO.getId() == null) return;
+
         Student existingStudent = studentDAO.findById(studentDTO.getId());
         if (existingStudent != null) {
             updateEntityFromDto(existingStudent, studentDTO);
@@ -53,6 +57,8 @@ public class StudentServiceImpl implements StudentService {
 
     @Override
     public void delete(Long id) {
+        if (id == null) return;
+
         Student student = studentDAO.findById(id);
         if (student != null) {
             studentDAO.delete(student);
@@ -71,9 +77,8 @@ public class StudentServiceImpl implements StudentService {
         dto.setPersonalNumber(student.getPersonalNumber());
         dto.setPhone(student.getPhone());
 
-        // Handle list of addresses
         if (student.getAddress() != null && !student.getAddress().isEmpty()) {
-            Address address = student.getAddress().get(0); // Use first address
+            Address address = student.getAddress().get(0);
             AddressDTO addressDTO = new AddressDTO();
             addressDTO.setId(address.getId());
             addressDTO.setStreet(address.getStreet());
@@ -88,6 +93,8 @@ public class StudentServiceImpl implements StudentService {
 
     // Convert DTO to Entity
     private Student convertToEntity(StudentDTO dto) {
+        if (dto == null) return null;
+
         Student student = new Student();
         student.setId(dto.getId());
         student.setName(dto.getName());
@@ -103,15 +110,19 @@ public class StudentServiceImpl implements StudentService {
             address.setPostcode(dto.getAddressDTO().getPostcode());
             address.setCity(dto.getAddressDTO().getCity());
             address.setCountry(dto.getAddressDTO().getCountry());
-            address.setStudent(student); // Set back-reference
-            student.setAddress(List.of(address)); // Set as list
+            address.setStudent(student); // Back-reference
+            student.setAddress(List.of(address));
+        } else {
+            student.setAddress(Collections.emptyList());
         }
 
         return student;
     }
 
-    // Update Entity from DTO
+    // Update existing entity from DTO
     private void updateEntityFromDto(Student student, StudentDTO dto) {
+        if (student == null || dto == null) return;
+
         student.setName(dto.getName());
         student.setSurname(dto.getSurname());
         student.setAge(dto.getAge());
@@ -127,6 +138,8 @@ public class StudentServiceImpl implements StudentService {
             address.setCountry(dto.getAddressDTO().getCountry());
             address.setStudent(student);
             student.setAddress(List.of(address));
+        } else {
+            student.setAddress(Collections.emptyList());
         }
     }
 }

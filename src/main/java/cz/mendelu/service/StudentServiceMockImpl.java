@@ -4,12 +4,13 @@ import cz.mendelu.service.dto.StudentDTO;
 import org.springframework.context.annotation.Profile;
 import org.springframework.http.*;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
 import java.util.List;
 
-@Profile("mock") // Use only when 'mock' profile is active
+@Profile("mock") // Only active when 'mock' profile is used
 @Service
 public class StudentServiceMockImpl implements StudentService {
 
@@ -23,29 +24,41 @@ public class StudentServiceMockImpl implements StudentService {
 
     @Override
     public List<StudentDTO> getAllStudents() {
-        ResponseEntity<StudentDTO[]> response = restTemplate.getForEntity(
-                MOCK_API_BASE_URL + "/students", StudentDTO[].class
-        );
-        StudentDTO[] students = response.getBody();
-        return students != null ? Arrays.asList(students) : List.of();
+        try {
+            ResponseEntity<StudentDTO[]> response = restTemplate.getForEntity(
+                    MOCK_API_BASE_URL + "/students", StudentDTO[].class
+            );
+            StudentDTO[] students = response.getBody();
+            return students != null ? Arrays.asList(students) : List.of();
+        } catch (RestClientException e) {
+            System.err.println("Failed to fetch students from mock API: " + e.getMessage());
+            return List.of();
+        }
     }
 
     @Override
     public StudentDTO findById(Long id) {
-        // Note: This assumes the endpoint returns a single StudentDTO object
-        return restTemplate.getForObject(
-                MOCK_API_BASE_URL + "/students/" + id, StudentDTO.class
-        );
+        try {
+            return restTemplate.getForObject(
+                    MOCK_API_BASE_URL + "/students/" + id, StudentDTO.class
+            );
+        } catch (RestClientException e) {
+            System.err.println("Failed to fetch student with ID " + id + ": " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public void save(StudentDTO studentDTO) {
-        // If mock server supports POST:
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
+        try {
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            HttpEntity<StudentDTO> request = new HttpEntity<>(studentDTO, headers);
 
-        HttpEntity<StudentDTO> request = new HttpEntity<>(studentDTO, headers);
-        restTemplate.postForEntity(MOCK_API_BASE_URL + "/students", request, Void.class);
+            restTemplate.postForEntity(MOCK_API_BASE_URL + "/students", request, Void.class);
+        } catch (RestClientException e) {
+            System.err.println("Failed to save student to mock API: " + e.getMessage());
+        }
     }
 
     @Override

@@ -3,19 +3,39 @@ package cz.mendelu.service;
 import cz.mendelu.service.dto.StudentDTO;
 import java.util.List;
 
+/**
+ * Service interface for managing students.
+ */
 public interface StudentService {
-    // Get all students as DTOs
+
+    /**
+     * Retrieve all students.
+     * @return List of StudentDTO
+     */
     List<StudentDTO> getAllStudents();
 
-    // Get single student by ID as DTO - renamed to match controller
-    StudentDTO findById(Long id);  // Changed from getStudentById
+    /**
+     * Find a student by ID.
+     * @param id Student ID
+     * @return StudentDTO or null if not found
+     */
+    StudentDTO findById(Long id);
 
-    // Create new student from DTO
+    /**
+     * Save a new student.
+     * @param studentDTO Student data to save
+     */
     void save(StudentDTO studentDTO);
 
-    // Update existing student from DTO
+    /**
+     * Update an existing student.
+     * @param studentDTO Student data to update
+     */
     void update(StudentDTO studentDTO);
 
-    // Delete student by ID
+    /**
+     * Delete a student by ID.
+     * @param id Student ID to delete
+     */
     void delete(Long id);
 }

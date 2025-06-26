@@ -2,6 +2,7 @@ package cz.mendelu.controller;
 
 import cz.mendelu.service.StudentService;
 import cz.mendelu.service.dto.StudentDTO;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -16,34 +17,42 @@ public class StudentController {
         this.studentService = studentService;
     }
 
-    // Get all students
+    // GET all students
     @GetMapping
-    public List<StudentDTO> getStudents() {
-        return studentService.getAllStudents();
+    public ResponseEntity<List<StudentDTO>> getStudents() {
+        return ResponseEntity.ok(studentService.getAllStudents());
     }
 
-    // Get a specific student by ID - simplified
+    // GET student by ID
     @GetMapping("/{id}")
-    public StudentDTO getStudentById(@PathVariable Long id) {
-        return studentService.findById(id); // Directly return the DTO
+    public ResponseEntity<StudentDTO> getStudentById(@PathVariable Long id) {
+        StudentDTO student = studentService.findById(id);
+        if (student != null) {
+            return ResponseEntity.ok(student);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    // Create a new student
+    // POST create new student
     @PostMapping
-    public void createStudent(@RequestBody StudentDTO studentDTO) {
+    public ResponseEntity<Void> createStudent(@RequestBody StudentDTO studentDTO) {
         studentService.save(studentDTO);
+        return ResponseEntity.status(201).build(); // HTTP 201 Created
     }
 
-    // Update an existing student
+    // PUT update existing student
     @PutMapping("/{id}")
-    public void updateStudent(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
+    public ResponseEntity<Void> updateStudent(@PathVariable Long id, @RequestBody StudentDTO studentDTO) {
         studentDTO.setId(id);
         studentService.update(studentDTO);
+        return ResponseEntity.noContent().build(); // HTTP 204 No Content
     }
 
-    // Delete a student
+    // DELETE student by ID
     @DeleteMapping("/{id}")
-    public void deleteStudent(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
         studentService.delete(id);
+        return ResponseEntity.noContent().build(); // HTTP 204 No Content
     }
 }
