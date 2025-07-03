@@ -1,4 +1,4 @@
-name: Build REST API
+name: Build Team Management REST API
 
 on:
   push:
