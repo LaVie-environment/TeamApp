@@ -1,8 +1,14 @@
 package cz.mendelu.service.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 public class RoleDTO {
 
     private Long id;
+
+    @NotBlank(message = "Role name must not be blank")
+    @Size(max = 50, message = "Role name must not exceed 50 characters")
     private String name;
 
     public RoleDTO() {}
@@ -28,4 +34,3 @@ public class RoleDTO {
         this.name = name;
     }
 }
-

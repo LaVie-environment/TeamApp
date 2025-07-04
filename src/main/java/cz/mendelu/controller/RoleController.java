@@ -2,6 +2,7 @@ package cz.mendelu.controller;
 
 import cz.mendelu.service.RoleService;
 import cz.mendelu.service.dto.RoleDTO;
+import jakarta.validation.Valid; // Import for validation
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,7 +31,7 @@ public class RoleController {
         return role != null ? ResponseEntity.ok(role) : ResponseEntity.notFound().build();
     }
 
-    // Get role by name (optional utility)
+    // Get role by name
     @GetMapping("/name/{name}")
     public ResponseEntity<RoleDTO> getRoleByName(@PathVariable String name) {
         RoleDTO role = roleService.getRoleByName(name);
@@ -39,15 +40,15 @@ public class RoleController {
 
     // Create new role
     @PostMapping
-    public ResponseEntity<Void> createRole(@RequestBody RoleDTO roleDTO) {
+    public ResponseEntity<Void> createRole(@Valid @RequestBody RoleDTO roleDTO) {
         roleService.save(roleDTO);
         return ResponseEntity.ok().build();
     }
 
     // Update existing role
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateRole(@PathVariable Long id, @RequestBody RoleDTO roleDTO) {
-        roleDTO.setId(id);  // Ensure ID matches path
+    public ResponseEntity<Void> updateRole(@PathVariable Long id, @Valid @RequestBody RoleDTO roleDTO) {
+        roleDTO.setId(id);
         roleService.update(roleDTO);
         return ResponseEntity.ok().build();
     }
