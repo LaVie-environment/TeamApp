@@ -1,7 +1,9 @@
 package cz.mendelu.service;
 
 import cz.mendelu.dao.ProjectRepository;
+import cz.mendelu.dao.RoleRepository;
 import cz.mendelu.dao.domain.Project;
+import cz.mendelu.dao.domain.Role;
 import cz.mendelu.service.dto.ProjectDTO;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
@@ -14,9 +16,11 @@ import java.util.stream.Collectors;
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
+    private final RoleRepository roleRepository;
 
-    public ProjectServiceImpl(ProjectRepository projectRepository) {
+    public ProjectServiceImpl(ProjectRepository projectRepository, RoleRepository roleRepository) {
         this.projectRepository = projectRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -57,17 +61,23 @@ public class ProjectServiceImpl implements ProjectService {
         }
     }
 
-    // DTO to Entity
     private Project toEntity(ProjectDTO dto) {
+        if (dto == null) return null;
+
         Project project = new Project();
         project.setId(dto.getId());
         project.setName(dto.getName());
-        project.setRoleName(dto.getRoleName());
+
+        if (dto.getRoleName() != null) {
+            Role role = roleRepository.findByName(dto.getRoleName())
+                    .orElseThrow(() -> new IllegalArgumentException("Role not found: " + dto.getRoleName()));
+            project.setRole(role);
+        }
+
         return project;
     }
 
-    // Entity to DTO
     private ProjectDTO toDto(Project entity) {
-        return new ProjectDTO(entity.getId(), entity.getName(), entity.getRoleName());
+        return new ProjectDTO(entity.getId(), entity.getName(), entity.getRole() != null ? entity.getRole().getName() : null);
     }
 }
