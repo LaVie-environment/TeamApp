@@ -1,19 +1,22 @@
 package cz.mendelu.service;
 
 import cz.mendelu.service.dto.ProjectDTO;
-import cz.mendelu.service.dto.TaskDTO;
-
 import java.util.List;
 
 public interface ProjectService {
-    List<ProjectDTO> getAllProjects();
-    ProjectDTO getProjectById(Long id);
-    void save(ProjectDTO projectDTO);
-    void update(ProjectDTO projectDTO);
-    void delete(Long id);
 
-    List<TaskDTO> getTasksByProjectId(Long projectId);
-    void createTask(TaskDTO taskDTO);
-    void updateTask(TaskDTO taskDTO);
-    void deleteTask(Long projectId, Long taskId);
+    // Retrieve all projects
+    List<ProjectDTO> getAllProjects();
+
+    // Find a project by its ID
+    ProjectDTO getProjectById(Long id);
+
+    // Save a new project
+    void save(ProjectDTO projectDTO);
+
+    // Update an existing project
+    void update(ProjectDTO projectDTO);
+
+    // Delete a project by ID
+    void delete(Long id);
 }

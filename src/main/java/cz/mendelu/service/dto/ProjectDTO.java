@@ -1,9 +1,19 @@
 package cz.mendelu.service.dto;
 
-import java.util.List;
-
 public class ProjectDTO {
+
     private Long id;
+    private String name;
+    private String roleName;
+
+    public ProjectDTO() {
+    }
+
+    public ProjectDTO(Long id, String name, String roleName) {
+        this.id = id;
+        this.name = name;
+        this.roleName = roleName;
+    }
 
     public Long getId() {
         return id;
@@ -28,18 +38,4 @@ public class ProjectDTO {
     public void setRoleName(String roleName) {
         this.roleName = roleName;
     }
-
-    public List<TaskDTO> getTasks() {
-        return tasks;
-    }
-
-    public void setTasks(List<TaskDTO> tasks) {
-        this.tasks = tasks;
-    }
-
-    private String name;
-    private String roleName;
-    private List<TaskDTO> tasks;
-
-    // Getters and Setters
-}
+} 
